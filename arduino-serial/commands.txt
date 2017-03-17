@@ -1,0 +1,19 @@
+
+
+to send:
+
+./arduino-serial -b 115200 -p /dev/*usbmodem* -f filename.extension
+
+
+to recv:
+
+screen /dev/*usbmodem*
+
+
+
+
+to recv to file:
+
+./arduino-serial -b 115200 -p /dev/*usbmodem* -v fileoutputname.extension
+
+
