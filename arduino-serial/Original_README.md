@@ -18,12 +18,8 @@ Options:
   -p, --port=serialport      Serial port Arduino is connected to
   -s, --send=string          Send string to Arduino
   -S, --sendline=string      Send string with newline to Arduino
-  -i  --stdinput             Use standard input
-  -y, --byte                 ! Receive single byte from Arduino & print it out
-  -r, --receive              ! Receive string from Arduino & print it out
+  -r, --receive              Receive string from Arduino & print it out
   -n  --num=num              Send a number as a single byte
-  -f  --input=ifile          ! Send file as input
-  -v  --output=ofile         ! Save output to file
   -F  --flush                Flush serial port buffers for fresh reading
   -d  --delay=millis         Delay for specified milliseconds
   -e  --eolchar=char         Specify EOL char for reads (default '\n')
@@ -39,10 +35,6 @@ Note: Order is important. Set '-b' baudrate before opening port'-p'.
 
 Downloads
 ---------
-
-Midfield-Data-Transfer-System Repo:
- - https://github.com/letmeadam/Midfield-Data-Transfer-System.git
-
 For convenience, here's some pre-built versions of arduino-serial. 
 They may not be updated regularly, so compile it yourself if you can.
 Click the "view raw" to get the actual zip file.
@@ -56,11 +48,9 @@ Compilation
 arduino-serial should compile on any POSIX-compatible system.
 Tested on Mac OS X, Ubuntu Linux, Raspian Linux, Beaglebone Linux
 
-(Original repo: https://github.com/todbot/arduino-serial.git )
-
 To build, just check it out, make, and run it like:
 <pre>
-% git clone https://github.com/letmeadam/Midfield-Data-Transfer-System.git
+% git clone https://github.com/todbot/arduino-serial.git
 % cd arduino-serial
 % make
 % ./arduino-serial
