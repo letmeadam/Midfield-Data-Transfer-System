@@ -49,53 +49,11 @@
 //*********************************************************************************************
 #define SERIAL_BAUD   115200
 
-/* for Feather 32u4
-#define RFM69_CS      8
-#define RFM69_IRQ     7
-#define RFM69_IRQN    4  // Pin 7 is IRQ 4!
-#define RFM69_RST     4
-*/
-
 /* for Feather M0 */
 #define RFM69_CS      8
 #define RFM69_IRQ     3
 #define RFM69_IRQN    3  // Pin 3 is IRQ 3!
 #define RFM69_RST     4
-
-/* ESP8266 feather w/wing
-#define RFM69_CS      2
-#define RFM69_IRQ     15
-#define RFM69_IRQN    digitalPinToInterrupt(RFM69_IRQ )
-#define RFM69_RST     16
-*/
-
-/* Feather 32u4 w/wing
-#define RFM69_CS      10   // "B"
-#define RFM69_RST     11   // "A"
-#define RFM69_IRQ     2    // "SDA" (only SDA/SCL/RX/TX have IRQ!)
-#define RFM69_IRQN    digitalPinToInterrupt(RFM69_IRQ )
-*/
-
-/* Feather m0 w/wing 
-#define RFM69_CS      10   // "B"
-#define RFM69_RST     11   // "A"
-#define RFM69_IRQ     6    // "D"
-#define RFM69_IRQN    digitalPinToInterrupt(RFM69_IRQ )
-*/
-
-/* Teensy 3.x w/wing 
-#define RFM69_RST     9   // "A"
-#define RFM69_CS      10   // "B"
-#define RFM69_IRQ     4    // "C"
-#define RFM69_IRQN    digitalPinToInterrupt(RFM69_IRQ )
-*/
-
-/* WICED Feather w/wing 
-#define RFM69_RST     PA4     // "A"
-#define RFM69_CS      PB4     // "B"
-#define RFM69_IRQ     PA15    // "C"
-#define RFM69_IRQN    RFM69_IRQ
-*/
 
 #define LED           13  // onboard blinky
 //#define LED           0 //use 0 on ESP8266
@@ -136,11 +94,6 @@ void setup() {
   Serial.print("\nListening at ");
   Serial.print(FREQUENCY==RF69_433MHZ ? 433 : FREQUENCY==RF69_868MHZ ? 868 : 915);
   Serial.println(" MHz");
-
-  // Initialize buffer
-  buffer_start = 0;
-  buffer_full  = 0;
-  timeout = TIMEOUT_SET;
 }
 
 void loop() {
@@ -148,95 +101,8 @@ void loop() {
   if (radio.receiveDone())
   {
     //print message received to serial
-//    Serial.print('[');
-//    Serial.print(radio.SENDERID);
-//    Serial.print("] ");
-//    Serial.print("[");
-//    Serial.print(Serial.availableForWrite());
-//    Serial.print(radio.DATALEN);
-//    Serial.println("]");
-
-    for (int i = 0; i < radio.DATALEN; i++) {
+    for (int i = 0; i < radio.DATALEN; i++)
       Serial.print(((char*)radio.DATA)[i]);
-      if (((char*)radio.DATA)[i] == '\n')
-        Serial.print('\r');
-    }
-//    Serial.print((char*)radio.DATA);
-//    if (((char*)radio.DATA)[radio.DATALEN - 1] == '\n')
-//      Serial.print('\r');
-
-//      addToBuffer();
-
-//    Serial.print("   [RX_RSSI:");Serial.print(radio.RSSI);Serial.print("]");
-
-    //check if received message contains Hello World
-//    if (strstr((char *)radio.DATA, "Hello World"))
-//    {
-      //check if sender wanted an ACK
-//      if (radio.ACKRequested())
-//      {
-//        radio.sendACK();
-//        Serial.println(" - ACK sent");
-//      }
-//    Blink(LED, 50, 1); //blink LED 3 times, 40ms between blinks
-//    }  
-    Serial.flush(); //make sure all serial data is clocked out before sleeping the MCU
   }
-//  else if (timeout <= 0){
-//    emptyBuffer(63);
-//    Blink(LED, 1000, 3);
-//    timeout = TIMEOUT_SET;
-//  }
-//  timeout--;
-
-//  radio.receiveDone(); //put radio in RX mode
   Serial.flush(); //make sure all serial data is clocked out before sleeping the MCU
-}
-
-void emptyBuffer(int amount) {
-  if (amount > buffer_full)
-    amount = buffer_full;
-
-  for (int i = 0; i < amount; i++) {
-    Serial.print(buffer[buffer_start]);
-    if (buffer[buffer_start] == '\n')
-      Serial.print('\r');
-    buffer_start = (buffer_start + 1) % BUFFER_SIZE;
-    buffer_full--;
-    if (buffer_full == 0)
-      break;
-  }
-
-  if (buffer_full > 0) {
-    Serial.print("(");
-    Serial.print(buffer_full);
-    Serial.println(")");
-  }
-  Serial.flush();
-}
-
-void addToBuffer() {
-  char *data = (char*) radio.DATA;
-
-  for (int i = 0; i < radio.DATALEN; i++) {
-    //BUFFER_SIZE 1024
-    buffer[(buffer_start + buffer_full) % BUFFER_SIZE] = data[i];
-    buffer_full++;
-    if (buffer_full == BUFFER_SIZE)
-      emptyBuffer(BUFFER_SIZE);
-  }
-  Serial.print("(");
-  Serial.print(buffer_full);
-  Serial.println(")");
-}
-
-void Blink(byte PIN, byte DELAY_MS, byte loops)
-{
-  for (byte i=0; i<loops; i++)
-  {
-    digitalWrite(PIN,HIGH);
-    delay(DELAY_MS);
-    digitalWrite(PIN,LOW);
-    delay(DELAY_MS);
-  }
 }
